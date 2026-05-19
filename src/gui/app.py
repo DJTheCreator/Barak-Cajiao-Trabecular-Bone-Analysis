@@ -127,9 +127,16 @@ def main():
 
     all_trees = [(tree_CC, checked_CC), (tree_ML, checked_ML), (tree_PD, checked_PD)]
 
+    unselected = [
+        tree.item(iid, "text").split(" ", 1)[1]
+        for tree, checked in all_trees
+        for iid, var in checked.items()
+        if not var.get()
+    ]
+
     # ---------- Interaction ------------
 
-    current_analysis = generation_settings.Analysis(median_graph_enabled, printer_box, method_box, orientations, all_trees)
+    current_analysis = generation_settings.Analysis(median_graph_enabled, printer_box, method_box, orientations, unselected)
     start_button = ttk.Button(tab1, text="Generate Graph",
                               command=lambda: run_pipeline.generate_graph(current_analysis))
     start_button.grid(row=1, column=2)

@@ -10,6 +10,12 @@ class Analysis:
         self.orientations = orientations
         self.disabled_tests = disabled_tests
 
+    def vget(self, widget):
+        # ipywidgets use .value, tkinter use .get()
+        if hasattr(widget, 'value'):
+            return widget.value
+        return widget.get()
+
 
 class OrientationData:
     def __init__(self, *, total_energy, ultimate_strength, youngs_modulus):

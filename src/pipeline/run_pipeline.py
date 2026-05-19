@@ -9,18 +9,24 @@ import openpyxl
 
 def generate_graph(analysis: Analysis):
     median_graph_enabled, printer, method, orientations, disabled_tests = (
-        analysis.median_graph_enabled.get(), analysis.printer.get(), analysis.method.get(), analysis.orientations, analysis.disabled_tests)
+        analysis.vget(analysis.median_graph_enabled), analysis.vget(analysis.printer), analysis.vget(analysis.method),
+        analysis.orientations, analysis.disabled_tests)
 
-    unselected = [
-        tree.item(iid, "text").split(" ", 1)[1]
-        for tree, checked in disabled_tests
-        for iid, var in checked.items()
-        if not var.get()
-    ]
+    # Handle both tkinter (list of (tree, checked) tuples) and ipywidgets (list of paths)
+    if disabled_tests and isinstance(disabled_tests[0], tuple):
+        # tkinter format
+        unselected = [
+            tree.item(iid, "text").split(" ", 1)[1]
+            for tree, checked in disabled_tests
+            for iid, var in checked.items()
+            if not var.get()
+        ]
+    else:
+        # ipywidgets format — already a list of unchecked file paths
+        unselected = disabled_tests
 
     for file in unselected:
         SKIPPED_TESTS.append(file)
-    print(SKIPPED_TESTS)
 
     ax = plt.subplot()
     handles = []
