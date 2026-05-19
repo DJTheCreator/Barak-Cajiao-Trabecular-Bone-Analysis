@@ -37,7 +37,7 @@ def generate_graph(analysis: Analysis):
     # Creates dataframes for all enabled orientations
     orientations_data: dict[str, OrientationData] = {}
     for key in ['medial-lateral', 'cranial-caudal', 'proximal-distal']:
-        if orientations.get(key).get():
+        if analysis.vget(orientations.get(key)):
             print("scanning " + key)
             current_orientation = load_dataframes_from_files(path=data_path / key)
 
